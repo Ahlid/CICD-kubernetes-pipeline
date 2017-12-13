@@ -1,0 +1,4 @@
+Links interessantes aqui:
+
+CI/CD:
+https://stackify.com/top-continuous-integration-tools/
