@@ -10,8 +10,8 @@ setup:
   image: docker:latest
   script:
     - cd ./hellonode
-    - print ${CI_BUILD_TOKEN}
-    - print ${CI_REGISTRY}
+    - echo ${CI_BUILD_TOKEN}
+    - echo ${CI_REGISTRY}
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
     - docker build -t ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
