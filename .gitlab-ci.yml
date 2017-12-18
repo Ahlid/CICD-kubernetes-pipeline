@@ -14,6 +14,7 @@ build-docker: #builds the docker image for the release
   
   script:
     - cd ./hellonode
+    - echo ${CONTAINER_IMAGE}
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
     - docker build -t ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
