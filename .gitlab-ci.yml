@@ -10,7 +10,7 @@ stages: #declare the stages to task
   - build-docker-image
   - deploy_to_gcloud
   
-build-docker: #builds the docker image for the release
+.build-docker: #builds the docker image for the release
   stage: build-docker-image
   image: docker:latest
   
@@ -29,6 +29,6 @@ deploy:
   stage: deploy_to_gcloud
   image: google/cloud-sdk:latest
   script:
-    - sudo apt-get install kubectl
+    - apt-get install kubectl
     - gcloud container clusters get-credentials social-ant-network-cluster --zone us-central1-a --project agiit1718-42
 
