@@ -29,6 +29,6 @@ deploy:
   stage: deploy_to_gcloud
   image: google/cloud-sdk:latest
   script:
-    - gcloud components install kubectl
+    - sudo apt-get install kubectl
     - gcloud container clusters get-credentials social-ant-network-cluster --zone us-central1-a --project agiit1718-42
 
