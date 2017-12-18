@@ -29,23 +29,6 @@ build-docker: #builds the docker image for the release
 deploy:
   stage: deploy_to_gcloud
   image: lwolf/helm-kubectl-docker:v152_213
-  before_script:
-    - mkdir -p /etc/deploy
-    - echo ${kube_config} | base64 -d > ${KUBECONFIG}
-    - kubectl config use-context homekube
-    - helm init --client-only
-    - helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-    - helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-    - helm repo update
   script:
-    - cd deploy/libr-files
-    - helm dep build
-    - export API_VERSION="$(grep "appVersion" Chart.yaml | cut -d" " -f2)"
-    - export RELEASE_NAME="libr-files-v${API_VERSION/./-}"
-    - export DEPLOYS=$(helm ls | grep $RELEASE_NAME | wc -l)
-    - if [ ${DEPLOYS}  -eq 0 ]; then helm install --name=${RELEASE_NAME} . --namespace=${STAGING_NAMESPACE}; else helm upgrade ${RELEASE_NAME} . --namespace=${STAGING_NAMESPACE}; fi
-  environment:
-    name: staging
-    url: https://librerio.example.com
-  only:
-  - master
+    - gcloud container clusters get-credentials social-ant-network-cluster --zone us-central1-a --project agiit1718-42
+
