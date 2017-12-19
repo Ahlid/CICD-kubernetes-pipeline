@@ -28,6 +28,10 @@ deploy:
   stage: deploy_to_gcloud
   image: dtzar/helm-kubectl
   script:
+    - echo "${KUBE_URL}
+    - echo "${KUBE_URL}
+    - echo "${KUBE_URL}
+    - echo "${KUBE_URL}
     - kubectl config --kubeconfig='${KUBECONFIG}' set-context gcloud-context
     - echo ${KUBECONFIG}
     - cat ${KUBECONFIG}
