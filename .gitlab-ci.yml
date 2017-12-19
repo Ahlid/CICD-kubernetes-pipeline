@@ -32,8 +32,6 @@ deploy:
     - echo "${KUBE_URL}"
     - echo "${KUBE_TOKEN}"
     - echo "${KUBE_NAMESPACE}"
-    - echo "${KUBECONFIG}"
-    - kubectl config --kubeconfig='${KUBECONFIG}' set-context gcloud-context
-    - echo ${KUBECONFIG}
-    - cat ${KUBECONFIG}
-
+    - echo "${KUBE_CONFIG}"
+    - cat '${KUBE_CONFIG}' > config
+    - kubectl config --kubeconfig='config' set-context gcloud-context
