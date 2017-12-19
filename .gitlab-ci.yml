@@ -26,7 +26,7 @@ stages: #declare the stages to task
     
 deploy:
   stage: deploy_to_gcloud
-  image: dtzar/helm-kubectl
+  image: google/cloud-sdk:latest
   script:
     - printenv
     - echo "${KUBE_URL}"
