@@ -28,6 +28,7 @@ deploy:
   stage: deploy_to_gcloud
   image: dtzar/helm-kubectl
   script:
+    - printenv
     - echo "${KUBE_URL}"
     - echo "${KUBE_TOKEN}"
     - echo "${KUBE_NAMESPACE}"
