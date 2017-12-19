@@ -34,5 +34,5 @@ deploy:
     - echo "${KUBE_NAMESPACE}"
     - echo "${KUBE_CONFIG}"
     - echo "${KUBE_CONFIG}" > config
-    - kubectl config --kubeconfig='config' set-context gcloud-context
+    - kubectl config --kubeconfig='config' set-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster
     - kubectl get pods
