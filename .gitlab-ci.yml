@@ -34,7 +34,7 @@ deploy:
     - echo "${KUBE_NAMESPACE}"
     - echo "${KUBE_CONFIG}"
     - echo "${KUBE_CONFIG}" > config
-    - KUBECONFIG=./config
+    - export KUBECONFIG=./config
     - kubectl config view
     - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster
     - kubectl get pods
