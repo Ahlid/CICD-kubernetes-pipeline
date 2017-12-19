@@ -35,3 +35,4 @@ deploy:
     - echo "${KUBE_CONFIG}"
     - echo "${KUBE_CONFIG}" > config
     - kubectl config --kubeconfig='config' set-context gcloud-context
+    - kubectl get pods
