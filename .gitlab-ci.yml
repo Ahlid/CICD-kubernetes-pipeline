@@ -30,5 +30,5 @@ deploy:
   image: dtzar/helm-kubectl
   script:
     - kubectl config --kubeconfig='${KUBECONFIG}' set-context gcloud-context
-    - cat ${KUBECONFIG}
+    - ls ${KUBECONFIG}
 
