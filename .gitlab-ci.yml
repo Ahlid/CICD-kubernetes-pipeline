@@ -34,5 +34,6 @@ deploy:
     - echo "${KUBE_NAMESPACE}"
     - echo "${KUBE_CONFIG}"
     - echo "${KUBE_CONFIG}" > config
-    - kubectl config --kubeconfig='config'
+    - KUBECONFIG=.
+    - kubectl config current-context
     - kubectl get pods
