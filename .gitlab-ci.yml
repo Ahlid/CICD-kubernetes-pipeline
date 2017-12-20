@@ -29,10 +29,10 @@ deploy:
   image: google/cloud-sdk:latest
   script:
     - printenv
-    - echo "KUBE_URL: ${KUBE_URL}"
-    - echo "KUBE_TOKEN: ${KUBE_TOKEN}"
-    - echo "KUBE_NAMESPACE: ${KUBE_NAMESPACE}"
-    - echo "${KUBE_CONFIG}"
+    #- echo "KUBE_URL: ${KUBE_URL}"
+    #- echo "KUBE_TOKEN: ${KUBE_TOKEN}"
+    #- echo "KUBE_NAMESPACE: ${KUBE_NAMESPACE}"
+    #- echo "${KUBE_CONFIG}"
     - echo "${KUBE_CONFIG}" > config
     - echo "${SERVICE_ACCOUNT_CREDENTIALS}" > credentials
     - export KUBECONFIG=./config
