@@ -28,13 +28,15 @@ deploy:
   stage: deploy_to_gcloud
   image: google/cloud-sdk:latest
   script:
-    - printenv
-    - echo "${KUBE_URL}"
-    - echo "${KUBE_TOKEN}"
-    - echo "${KUBE_NAMESPACE}"
-    - echo "${KUBE_CONFIG}"
-    - echo "${KUBE_CONFIG}" > config
+    #- printenv
+    #- echo "${KUBE_URL}"
+    #- echo "${KUBE_TOKEN}"
+    #- echo "${KUBE_NAMESPACE}"
+    #- echo "${KUBE_CONFIG}"
+    #- echo "${KUBE_CONFIG}" > config
+    - echo "${SERVICE_ACCOUNT_CREDENTIALS}" > credentials
     - export KUBECONFIG=./config
+    - gcloud container clusters get-credentials social-ant-network-cluster --zone=us-central1-a
     - kubectl config view
     - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster
     - kubectl get pods
