@@ -46,6 +46,6 @@ deploy:
     - echo "${POD_CONFIG}" > create-pod
     - kubectl delete pod my-private-pod || true # delete the pod if it exists
     - kubectl create -f create-pod # Creates the pod using teh configuration
-    - kubectl delete deployment hello-web || true # delete the deployment if it exists
-    - kubectl expose deployment hello-web --type=LoadBalancer --port 80 --target-port 8080 # Exposing the app on port 80
+    - kubectl delete deployment my-private-pod || true # delete the deployment if it exists
+    - kubectl expose deployment my-private-pod --type=LoadBalancer --port 80 --target-port 8080 # Exposing the app on port 80
     - kubectl get pods
