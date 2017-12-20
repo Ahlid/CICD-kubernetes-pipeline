@@ -40,7 +40,6 @@ deploy:
     - gcloud config set project agiit1718-42 
     - gcloud container clusters get-credentials social-ant-network-cluster --zone=us-central1-a
     - kubectl config view
-    - kubectl create secret -n $KUBE_NAMESPACE docker-registry gitlab-registry --docker-server="$CI_REGISTRY" --docker-username=gitlab-ci-token --docker-password="$CI_BUILD_TOKEN" --docker-email="$GITLAB_USER_EMAIL"
     - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster
     - kubectl delete deployment hello-web #Remove the pod if it exists
     - kubectl run hello-web --image=registry.gitlab.com/moraispgsi/agiit-thematic-study:latest #Creating a pod and deploying the image
