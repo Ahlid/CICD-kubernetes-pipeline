@@ -40,8 +40,11 @@ deploy:
     - gcloud config set project agiit1718-42 
     - gcloud container clusters get-credentials social-ant-network-cluster --zone=us-central1-a
     - kubectl config view
-    - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster
-    - kubectl delete deployment hello-web #Remove the pod if it exists
-    - kubectl run hello-web --image=registry.gitlab.com/moraispgsi/agiit-thematic-study:latest #Creating a pod and deploying the image
-    - kubectl expose deployment hello-web --type=LoadBalancer --port 80 --target-port 8080 #Exposing the app on port 80
+    - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster # Set the current context (redundant)
+    - kubectl create secret docker-registry my-secret --docker-server=registry.gitlab.com/moraispgsi --docker-username=moraispgsi@gmail.com --docker-password=moraispgsi --docker-email=moraispgsi@gmail.com
+    - echo ${POD_CONFIG} > create-pod
+    - kubectl delete pod my-private-pod
+    - kubectl create -f create-pod # Creates the pod using teh configuration
+    - kubectl delete deployment hello-web # Remove the pod if it exists
+    - kubectl expose deployment hello-web --type=LoadBalancer --port 80 --target-port 8080 # Exposing the app on port 80
     - kubectl get pods
