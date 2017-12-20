@@ -41,6 +41,7 @@ deploy:
     - gcloud container clusters get-credentials social-ant-network-cluster --zone=us-central1-a
     - kubectl config view
     - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster # Set the current context (redundant)
+    - kubectl delete secret my-secret || true # delete the secret if it exists
     - kubectl create secret docker-registry my-secret --docker-server=registry.gitlab.com/moraispgsi --docker-username=moraispgsi@gmail.com --docker-password=moraispgsi --docker-email=moraispgsi@gmail.com
     - echo ${POD_CONFIG} > create-pod
     - kubectl delete pod my-private-pod || true # delete the pod if it exists
