@@ -28,17 +28,21 @@ deploy:
   stage: deploy_to_gcloud
   image: google/cloud-sdk:latest
   script:
-    #- printenv
-    #- echo "${KUBE_URL}"
-    #- echo "${KUBE_TOKEN}"
-    #- echo "${KUBE_NAMESPACE}"
-    #- echo "${KUBE_CONFIG}"
-    #- echo "${KUBE_CONFIG}" > config
+    - printenv
+    - echo "KUBE_URL: ${KUBE_URL}"
+    - echo "KUBE_TOKEN: ${KUBE_TOKEN}"
+    - echo "KUBE_NAMESPACE: ${KUBE_NAMESPACE}"
+    - echo "${KUBE_CONFIG}"
+    - echo "${KUBE_CONFIG}" > config
     - echo "${SERVICE_ACCOUNT_CREDENTIALS}" > credentials
     - export KUBECONFIG=./config
     - gcloud auth activate-service-account --key-file "credentials"
     - gcloud config set project agiit1718-42 
     - gcloud container clusters get-credentials social-ant-network-cluster --zone=us-central1-a
     - kubectl config view
+    - kubectl create secret -n $KUBE_NAMESPACE docker-registry gitlab-registry --docker-server="$CI_REGISTRY" --docker-username=gitlab-ci-token --docker-password="$CI_BUILD_TOKEN" --docker-email="$GITLAB_USER_EMAIL"
     - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster
+    - kubectl delete deployment hello-web #Remove the pod if it exists
+    - kubectl run hello-web --image=registry.gitlab.com/moraispgsi/agiit-thematic-study:latest #Creating a pod and deploying the image
+    - kubectl expose deployment hello-web --type=LoadBalancer --port 80 --target-port 8080 #Exposing the app on port 80
     - kubectl get pods
