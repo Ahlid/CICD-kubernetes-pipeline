@@ -14,7 +14,6 @@ test:
   stage: testing
   image: node:boron
   script:
-    - cd hellonode/
     - npm install
     - npm test
 
