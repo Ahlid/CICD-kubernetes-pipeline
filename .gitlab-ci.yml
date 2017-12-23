@@ -1,52 +1,60 @@
-variables:
-  CONTAINER_IMAGE: ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF} 
-  CONTAINER_IMAGE_LATEST: ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest
+#variables:
+  #CONTAINER_IMAGE: ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF} 
+  #CONTAINER_IMAGE_LATEST: ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest
 
 services:
   - docker:dind #Start the docker daemon
 
 stages: #declare the stages to task
-  - build-docker-image
-  - deploy_to_gcloud
+  - testing
+  #- build-docker-image
+  #- deploy_to_gcloud
   
-.build-docker: #builds the docker image for the release
-  stage: build-docker-image
-  image: docker:latest
-  
+test:
+  stage: testing
+  image: node:boron
   script:
-    - cd ./hellonode
-    - echo "CONTAINER_IMAGE:" $(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
-    - LOWERCASE_CONTAINER_IMAGE=$(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
-    - LOWERCASE_CONTAINER_IMAGE_LATEST=$(echo "${CONTAINER_IMAGE_LATEST}" | tr '[:upper:]' '[:lower:]')
-    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - docker build -t ${LOWERCASE_CONTAINER_IMAGE} .
-    - docker tag ${LOWERCASE_CONTAINER_IMAGE} ${LOWERCASE_CONTAINER_IMAGE_LATEST}
-    - docker push ${LOWERCASE_CONTAINER_IMAGE}
-    - docker push ${LOWERCASE_CONTAINER_IMAGE_LATEST}
+    - npm install
+    - npm test
+
+#.build-docker: #builds the docker image for the release
+  #stage: build-docker-image
+  #image: docker:latest
+  
+  #script:
+    #- cd ./hellonode
+    #- echo "CONTAINER_IMAGE:" $(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
+    #- LOWERCASE_CONTAINER_IMAGE=$(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
+    #- LOWERCASE_CONTAINER_IMAGE_LATEST=$(echo "${CONTAINER_IMAGE_LATEST}" | tr '[:upper:]' '[:lower:]')
+    #- docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    #- docker build -t ${LOWERCASE_CONTAINER_IMAGE} .
+    #- docker tag ${LOWERCASE_CONTAINER_IMAGE} ${LOWERCASE_CONTAINER_IMAGE_LATEST}
+    #- docker push ${LOWERCASE_CONTAINER_IMAGE}
+    #- docker push ${LOWERCASE_CONTAINER_IMAGE_LATEST}
     
-deploy:
-  stage: deploy_to_gcloud
-  image: google/cloud-sdk:latest
-  script:
-    - printenv
-    #- echo "KUBE_URL: ${KUBE_URL}"
-    #- echo "KUBE_TOKEN: ${KUBE_TOKEN}"
-    #- echo "KUBE_NAMESPACE: ${KUBE_NAMESPACE}"
-    #- echo "${KUBE_CONFIG}"
-    - echo "${KUBE_CONFIG}" > config
-    - echo "${SERVICE_ACCOUNT_CREDENTIALS}" > credentials
-    - export KUBECONFIG=./config
-    - gcloud auth activate-service-account --key-file "credentials"
-    - gcloud config set project agiit1718-42 
-    - gcloud container clusters get-credentials social-ant-network-cluster --zone=us-central1-a
-    - kubectl config view
-    - kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster # Set the current context (redundant)
-    - kubectl delete secret my-secret || true # delete the secret if it exists
-    - kubectl create secret docker-registry my-secret --docker-server=registry.gitlab.com/moraispgsi --docker-username=moraispgsi@gmail.com --docker-password=moraispgsi --docker-email=moraispgsi@gmail.com
-    - echo "${POD_CONFIG}" > create-pod
-    - kubectl delete deployment my-private-pod || true # delete the pod if it exists
-    - while $(kubectl get pod my-private-pod); do echo "Waiting for deletion"; sleep 1; done;
-    - kubectl create -f create-pod # Creates the pod using teh configuration
-    - kubectl delete deployment my-private-pod || true # delete the deployment if it exists
-    - kubectl expose deployment my-private-pod --type=LoadBalancer --port 80 --target-port 8080 # Exposing the app on port 80
-    - kubectl get pods
+#deploy:
+  #stage: deploy_to_gcloud
+  #image: google/cloud-sdk:latest
+  #script:
+    #- printenv
+    ##- echo "KUBE_URL: ${KUBE_URL}"
+    ##- echo "KUBE_TOKEN: ${KUBE_TOKEN}"
+    ##- echo "KUBE_NAMESPACE: ${KUBE_NAMESPACE}"
+    ##- echo "${KUBE_CONFIG}"
+    #- echo "${KUBE_CONFIG}" > config
+    #- echo "${SERVICE_ACCOUNT_CREDENTIALS}" > credentials
+    #- export KUBECONFIG=./config
+    #- gcloud auth activate-service-account --key-file "credentials"
+    #- gcloud config set project agiit1718-42 
+    #- gcloud container clusters get-credentials social-ant-network-cluster --zone=us-central1-a
+    #- kubectl config view
+    #- kubectl config set current-context gke_agiit1718-42_us-central1-a_social-ant-network-cluster # Set the current context (redundant)
+    #- kubectl delete secret my-secret || true # delete the secret if it exists
+    #- kubectl create secret docker-registry my-secret --docker-server=registry.gitlab.com/moraispgsi --docker-username=moraispgsi@gmail.com --docker-password=moraispgsi --docker-email=moraispgsi@gmail.com
+    #- echo "${POD_CONFIG}" > create-pod
+    #- kubectl delete deployment my-private-pod || true # delete the pod if it exists
+    #- while $(kubectl get pod my-private-pod); do echo "Waiting for deletion"; sleep 1; done;
+    #- kubectl create -f create-pod # Creates the pod using teh configuration
+    #- kubectl delete deployment my-private-pod || true # delete the deployment if it exists
+    #- kubectl expose deployment my-private-pod --type=LoadBalancer --port 80 --target-port 8080 # Exposing the app on port 80
+    #- kubectl get pods
