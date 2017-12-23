@@ -1,4 +1,14 @@
-FROM node:6.9.2
+FROM node:boron
+
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# Bundle app source
+COPY . /usr/src/app
+
+# Install Dependencies
+RUN npm install
+
 EXPOSE 8080
-COPY server.js .
 CMD node server.js
