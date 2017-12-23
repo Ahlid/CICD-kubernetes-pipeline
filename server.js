@@ -1,14 +1,15 @@
-var http = require('http');
-var www = http.createServer(handleRequest);
+const http = require('http');
+const www = http.createServer(handleRequest);
 
-var handleRequest = function(request, response) {
+const PORT = process.env.PORT || 8000;
+const SERVER_ID = process.env.SERVER_ID || "Unknown";
+
+const handleRequest = function(request, response) {
   console.log('Received request for URL: ' + request.url);
   response.writeHead(200);
-  response.end('Hello World AGAIN!');
+  response.end(`Hello World from ${SERVER_ID}!`);
 };
 
-exports.serverOK = function (){
-  return "OK"
-}
+exports.serverOK = () => { return "OK" }
 
-www.listen(8080);
+www.listen(PORT);

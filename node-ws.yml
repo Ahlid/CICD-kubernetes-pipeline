@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: web-server
+  name: web-server-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: web-server
+    spec:
+      containers:
+        - name: node
+          image: ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF} 
+          ports:
+            - containerPort: 8080
+              name: www
+          env:
+            - name: SERVER_ID  #export the pod ID as SERVER_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+---
+apiVersion: v1 
+kind: Service
+metadata:
+  labels:
+    name: web-server
+  name: web-server-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    name: node
+  type: LoadBalancer
