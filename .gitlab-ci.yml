@@ -43,6 +43,7 @@ deploy:
     - kubectl config set-context default-system --cluster=default-cluster --user=default-admin --namespace ${KUBE_NAMESPACE}
     - kubectl config use-context default-system
     - kubectl cluster-info
+    - sed -i 's/__IMAGETAG__/${LOWERCASE_CONTAINER_IMAGE_LATEST}/g' node-ws.yml
     - kubectl apply -f ./node-ws.yml
   variables:
-    GL_IMAGE_TAG: $(echo "${CONTAINER_IMAGE_LATEST}" | tr '[:upper:]' '[:lower:]')
+    LOWERCASE_CONTAINER_IMAGE_LATEST: $(echo "${CONTAINER_IMAGE_LATEST}" | tr '[:upper:]' '[:lower:]')

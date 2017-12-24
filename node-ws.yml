@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: node
-          image: $GL_IMAGE_TAG
+          image: __IMAGETAG__
           ports:
             - containerPort: 8080
               name: www
