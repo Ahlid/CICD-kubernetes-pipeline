@@ -44,3 +44,5 @@ deploy:
     - kubectl config use-context default-system
     - kubectl cluster-info
     - kubectl apply -f ./node-ws.yml
+  variables:
+    GL_IMAGE_TAG: $(echo "${CONTAINER_IMAGE_LATEST}" | tr '[:upper:]' '[:lower:]')
