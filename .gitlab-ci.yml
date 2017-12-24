@@ -8,8 +8,8 @@ services:
 stages: #declare the stages to task
   - testing
   - build-docker-image
-  #- deploy_to_gcloud
-  
+  - deploy_to_gcloud
+
 test:
   stage: testing
   image: node:boron
@@ -19,7 +19,6 @@ test:
 
 build_image:
   stage: build-docker-image   # build image only after test passed
-  only: [master] # build and push images only for master branch commits
   image: docker:git # use simply git docker image
   services:
     - docker:dind
@@ -31,16 +30,18 @@ build_image:
     - docker tag ${LOWERCASE_CONTAINER_IMAGE} ${LOWERCASE_CONTAINER_IMAGE_LATEST}
     - docker push ${LOWERCASE_CONTAINER_IMAGE}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_LATEST}
-    
-#deploy:
-  #stage: deploy_to_gcloud
-  #image: google/cloud-sdk:latest
-  #script:
-    #- printenv
-    ##- echo "KUBE_URL: ${KUBE_URL}"
-    ##- echo "KUBE_TOKEN: ${KUBE_TOKEN}"
-    ##- echo "KUBE_NAMESPACE: ${KUBE_NAMESPACE}"
-    ##- echo "${KUBE_CONFIG}"
+
+deploy:
+  stage: deploy_to_gcloud
+  only: [master]  #build and push images only for master branch commits
+  image: google/cloud-sdk:latest
+  script:
+    - echo "${KUBE_CERTIFICATE}" > kube_ca.pem
+    - kubectl config set-cluster default-cluster --server=${KUBE_URL} --certificate-authority="$(pwd)/kube_ca.pem"
+    - kubectl config set-credentials default-admin --token=${KUBE_TOKEN}
+    - kubectl config set-context default-system --cluster=default-cluster --user=default-admin --namespace ${KUBE_NAMESPACE}
+    - kubectl config use-context default-system
+    - kubectl cluster-info
     #- echo "${KUBE_CONFIG}" > config
     #- echo "${SERVICE_ACCOUNT_CREDENTIALS}" > credentials
     #- export KUBECONFIG=./config
