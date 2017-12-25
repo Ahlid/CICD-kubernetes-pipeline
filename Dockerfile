@@ -2,7 +2,7 @@
 FROM quay.io/prometheus/prometheus:latest
 
 #Installing nodejs
-RUN apt-get install nodejs
+RUN apk add --update nodejs nodejs-npm
 
 # Create app directory
 RUN mkdir -p /usr/src/app
