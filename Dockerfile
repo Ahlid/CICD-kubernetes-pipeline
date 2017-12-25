@@ -1,4 +1,8 @@
-FROM node:boron
+#Starting from a prometheus image
+FROM quay.io/prometheus/prometheus:latest
+
+#Installing nodejs
+RUN apt-get install nodejs
 
 # Create app directory
 RUN mkdir -p /usr/src/app
