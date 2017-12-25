@@ -7,30 +7,30 @@ services:
   - docker:dind #Start the docker daemon
 
 stages: #declare the stages to task
-  #- testing
-  #- build-docker-image
+  - testing
+  - build-docker-image
   - deploy_to_gcloud
 
-#test:
-  #stage: testing
-  #image: node:boron
-  #script:
-    #- npm install
-    #- npm test
+test:
+  stage: testing
+  image: node:boron
+  script:
+    - npm install
+    - npm test
 
-#build_image:
-  #stage: build-docker-image   # build image only after test passed
-  #image: docker:git # use simply git docker image
-  #services:
-    #- docker:dind
-  #script:
-    #- LOWERCASE_CONTAINER_IMAGE=$(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
-    #- LOWERCASE_CONTAINER_IMAGE_LATEST=$(echo "${CONTAINER_IMAGE_LATEST}" | tr '[:upper:]' '[:lower:]')
-    #- docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    #- docker build -t ${LOWERCASE_CONTAINER_IMAGE} .
-    #- docker tag ${LOWERCASE_CONTAINER_IMAGE} ${LOWERCASE_CONTAINER_IMAGE_LATEST}
-    #- docker push ${LOWERCASE_CONTAINER_IMAGE}
-    #- docker push ${LOWERCASE_CONTAINER_IMAGE_LATEST}
+build_image:
+  stage: build-docker-image   # build image only after test passed
+  image: docker:git # use simply git docker image
+  services:
+    - docker:dind
+  script:
+    - LOWERCASE_CONTAINER_IMAGE=$(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
+    - LOWERCASE_CONTAINER_IMAGE_LATEST=$(echo "${CONTAINER_IMAGE_LATEST}" | tr '[:upper:]' '[:lower:]')
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker build -t ${LOWERCASE_CONTAINER_IMAGE} .
+    - docker tag ${LOWERCASE_CONTAINER_IMAGE} ${LOWERCASE_CONTAINER_IMAGE_LATEST}
+    - docker push ${LOWERCASE_CONTAINER_IMAGE}
+    - docker push ${LOWERCASE_CONTAINER_IMAGE_LATEST}
 
 deploy:
   stage: deploy_to_gcloud
