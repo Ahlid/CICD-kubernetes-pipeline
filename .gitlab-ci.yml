@@ -37,6 +37,7 @@ deploy:
   only: [master]  #build and push images only for master branch commits
   image: google/cloud-sdk:latest
   script:
+    - LOWERCASE_CONTAINER_IMAGE=$(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
     - echo "${KUBE_CERTIFICATE}" > kube_ca.pem
     - kubectl config set-cluster default-cluster --server=${KUBE_URL} --certificate-authority="$(pwd)/kube_ca.pem"
     - kubectl config set-credentials default-admin --token=${KUBE_TOKEN}
@@ -44,7 +45,6 @@ deploy:
     - kubectl config use-context default-system
     - kubectl cluster-info
     - echo "${LOWERCASE_CONTAINER_IMAGE}"
-    - sed -i "s|__IMAGETAG__|${LOWERCASE_CONTAINER_IMAGE}|g" node-ws.yml
+    - sed -i "s/__IMAGETAG__/${LOWERCASE_CONTAINER_IMAGE}/g" node-ws.yml
     - kubectl apply -f ./node-ws.yml
   variables:
-    LOWERCASE_CONTAINER_IMAGE: $(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
