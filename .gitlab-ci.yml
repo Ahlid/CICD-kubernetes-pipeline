@@ -45,6 +45,6 @@ deploy:
     - kubectl config use-context default-system
     - kubectl cluster-info
     - echo "${LOWERCASE_CONTAINER_IMAGE}"
-    - sed -i "s/__IMAGETAG__/${LOWERCASE_CONTAINER_IMAGE}/g" node-ws.yml
+    - sed -i "s-__IMAGETAG__-${LOWERCASE_CONTAINER_IMAGE}-g" node-ws.yml
     - kubectl apply -f ./node-ws.yml
   variables:
