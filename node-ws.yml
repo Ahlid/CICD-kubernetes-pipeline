@@ -23,7 +23,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
       imagePullSecrets:
-        - name: __IMAGESEC_
+        - name: __IMAGETAG__
 ---
 apiVersion: v1 
 kind: Service
