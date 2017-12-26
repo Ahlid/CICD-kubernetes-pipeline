@@ -50,4 +50,5 @@ deploy:
     - sed -i "s#__IMAGESECRET__#${CI_BUILD_REF}#g" node-ws.yml 
     - kubectl apply -f ./node-ws.yml
     - kubectl rollout status -n "$KUBE_NAMESPACE" -w "deployment/web-server-deployment"
+    - kubectl delete secret ${CI_BUILD_REF}
   variables:
