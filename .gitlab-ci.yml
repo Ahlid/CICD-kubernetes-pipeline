@@ -36,8 +36,6 @@ deploy:
   stage: deploy_to_gcloud
   only: [master]  #build and push images only for master branch commits
   image: google/cloud-sdk:latest
-  before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - LOWERCASE_CONTAINER_IMAGE=$(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
     - echo "${KUBE_CERTIFICATE}" > kube_ca.pem
@@ -47,11 +45,11 @@ deploy:
     - kubectl config use-context default-system
     - kubectl cluster-info
     #- kubectl create secret docker-registry ${KUBE_NAMESPACE} --docker-server=https://registry.gitlab.com/v1/ --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL
-    - kubectl create secret -n $KUBE_NAMESPACE docker-registry gitlab-registry \
-        --docker-server="$CI_REGISTRY" \
-        --docker-username="$CI_REGISTRY_USER" \
-        --docker-password="$CI_REGISTRY_PASSWORD" \
-        --docker-email="$GITLAB_USER_EMAIL" \
+    - kubectl create secret -n $KUBE_NAMESPACE docker-registry gitlab-registry 
+        --docker-server="$CI_REGISTRY" 
+        --docker-username="$CI_REGISTRY_USER" 
+        --docker-password="$CI_REGISTRY_PASSWORD" 
+        --docker-email="$GITLAB_USER_EMAIL" 
         -o yaml --dry-run | kubectl replace -n $KUBE_NAMESPACE --force -f -
     - kubectl rollout status -n "$KUBE_NAMESPACE" -w "deployment/name"
     - echo "${LOWERCASE_CONTAINER_IMAGE}"
