@@ -14,7 +14,7 @@ stages: #declare the stages to task
   - build_reverserproxy_image
   - deploy_to_gcloud
 
-.test:
+test:
   stage: testing
   image: node:boron
   script:
@@ -35,7 +35,7 @@ build_webserver:
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
 
-.build_reverse_proxy:
+build_reverse_proxy:
   stage: build_reverserproxy_image   # build image only after test passed
   image: docker:git # use simply git docker image
   services:
@@ -44,7 +44,7 @@ build_webserver:
     - LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY=$(echo "${CONTAINER_IMAGE_REVERSE_PROXY}" | tr '[:upper:]' '[:lower:]')
     - LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST=$(echo "${CONTAINER_IMAGE_REVERSE_PROXY_LATEST}" | tr '[:upper:]' '[:lower:]')
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - docker build -t ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} - < ReverseProxyDockerfile
+    - docker build --file ./ReverseProxyDockerfile -t ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} .
     - docker tag ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST}
