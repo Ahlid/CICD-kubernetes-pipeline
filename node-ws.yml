@@ -14,7 +14,9 @@ spec:
       containers:
         - name: node
           image: __IMAGETAG__
-          ports:
+          imagePullSecrets:
+            - name: __IMAGESEC_
+          ports: 
             - containerPort: 8080
               name: www
           env:
