@@ -44,16 +44,9 @@ deploy:
     - kubectl config set-context default-system --cluster=default-cluster --user=default-admin --namespace ${KUBE_NAMESPACE}
     - kubectl config use-context default-system
     - kubectl cluster-info
-    #- kubectl create secret docker-registry $CI_REGISTRY --docker-server=https://registry.gitlab.com/v1/ --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL
+    - kubectl create secret docker-registry $CI_REGISTRY --docker-server=https://registry.gitlab.com/v1/ --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL
     - echo "${LOWERCASE_CONTAINER_IMAGE}"
     - sed -i "s#__IMAGETAG__#${LOWERCASE_CONTAINER_IMAGE}#g" node-ws.yml
-    - sed -i "s#__IMAGESEC__#${KUBE_NAMESPACE}#g" node-ws.yml
-    - kubectl create secret -n "$KUBE_NAMESPACE" 
-      docker-registry gitlab-registry 
-      --docker-server="$CI_REGISTRY" 
-      --docker-username="$CI_REGISTRY_USER" 
-      --docker-password="$CI_REGISTRY_PASSWORD" 
-      --docker-email="$GITLAB_USER_EMAIL" 
-      -o yaml --dry-run | sed 's/dockercfg/dockerconfigjson/g' | kubectl replace -n "$KUBE_NAMESPACE" --force -f -
+    - sed -i "s#__IMAGESEC__#${CI_REGISTRY}#g" node-ws.yml
     - kubectl apply -f ./node-ws.yml
   variables:
