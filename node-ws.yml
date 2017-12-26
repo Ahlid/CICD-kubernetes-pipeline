@@ -14,8 +14,6 @@ spec:
       containers:
         - name: node
           image: __IMAGETAG__
-          imagePullSecrets:
-            - name: __IMAGESEC_
           ports: 
             - containerPort: 8080
               name: www
@@ -24,6 +22,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+      imagePullSecrets:
+        - name: __IMAGESEC_
 ---
 apiVersion: v1 
 kind: Service
