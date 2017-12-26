@@ -33,10 +33,10 @@ metadata:
   name: web-server-service
 spec:
   ports:
-  - port: 8080
+  - name: webserver
+    port: 8080
     protocol: TCP
     targetPort: 8080
-    nodePort: 8080
   selector:
     name: node
   type: LoadBalancer
