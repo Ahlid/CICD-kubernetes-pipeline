@@ -1,8 +1,10 @@
+
+FROM node:carbon
 #Starting from a prometheus image
-FROM quay.io/prometheus/prometheus:latest
+#FROM quay.io/prometheus/prometheus:latest
 
 #Installing nodejs
-RUN apk add --update nodejs nodejs-npm
+#RUN apk add --update nodejs nodejs-npm
 
 # Create app directory
 RUN mkdir -p /usr/src/app
