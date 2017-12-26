@@ -51,9 +51,9 @@ deploy:
         --docker-password="$CI_REGISTRY_PASSWORD" 
         --docker-email="$GITLAB_USER_EMAIL" 
         -o yaml --dry-run | kubectl replace -n $KUBE_NAMESPACE --force -f -
-    - kubectl rollout status -n "$KUBE_NAMESPACE" -w "deployment/name"
     - echo "${LOWERCASE_CONTAINER_IMAGE}"
     - sed -i "s#__IMAGETAG__#${LOWERCASE_CONTAINER_IMAGE}#g" node-ws.yml
     - sed -i "s#__IMAGESEC__#${KUBE_NAMESPACE}#g" node-ws.yml
     - kubectl apply -f ./node-ws.yml
+    - kubectl rollout status -n "$KUBE_NAMESPACE" -w "deployment/web-server-deployment"
   variables:
