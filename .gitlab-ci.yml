@@ -30,7 +30,7 @@ build_webserver:
     - LOWERCASE_CONTAINER_IMAGE_WEBSERVER=$(echo "${CONTAINER_IMAGE_WEBSERVER}" | tr '[:upper:]' '[:lower:]')
     - LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST=$(echo "${CONTAINER_IMAGE_WEBSERVER_LATEST}" | tr '[:upper:]' '[:lower:]')
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - docker build -t ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}/WebServerDockerfile
+    - docker build -t ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} -f /WebServerDockerfile
     - docker tag ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
