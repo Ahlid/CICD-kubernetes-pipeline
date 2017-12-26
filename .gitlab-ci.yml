@@ -14,7 +14,7 @@ stages: #declare the stages to task
   - build_reverserproxy_image
   - deploy_to_gcloud
 
-test:
+.test:
   stage: testing
   image: node:boron
   script:
