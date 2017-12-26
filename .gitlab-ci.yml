@@ -44,9 +44,9 @@ deploy:
     - kubectl config set-context default-system --cluster=default-cluster --user=default-admin --namespace ${KUBE_NAMESPACE}
     - kubectl config use-context default-system
     - kubectl cluster-info
+    - kubectl create secret docker-registry $CI_REGISTRY --docker-server=https://registry.gitlab.com/v1/ --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL
     - echo "${LOWERCASE_CONTAINER_IMAGE}"
     - sed -i "s#__IMAGETAG__#${LOWERCASE_CONTAINER_IMAGE}#g" node-ws.yml
     - kubectl apply -f ./node-ws.yml
-    - kubectl delete namespace prometheus
     - kubectl apply -f ./prometheus.yml
   variables:
