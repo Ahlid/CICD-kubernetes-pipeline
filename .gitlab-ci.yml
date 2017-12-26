@@ -11,7 +11,7 @@ stages: #declare the stages to task
   - build-docker-image
   - deploy_to_gcloud
 
-.test:
+test:
   stage: testing
   image: node:boron
   script:
