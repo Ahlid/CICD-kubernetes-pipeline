@@ -22,7 +22,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-      imagePullPolicy: Always
       imagePullSecrets:
         - name: __IMAGESEC_
 ---
