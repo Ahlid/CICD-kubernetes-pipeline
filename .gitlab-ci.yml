@@ -47,4 +47,5 @@ deploy:
     - echo "${LOWERCASE_CONTAINER_IMAGE}"
     - sed -i "s#__IMAGETAG__#${LOWERCASE_CONTAINER_IMAGE}#g" node-ws.yml
     - kubectl apply -f ./node-ws.yml
+    - kubectl apply -f ./prometheus.yml
   variables:
