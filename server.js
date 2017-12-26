@@ -1,7 +1,7 @@
 const http = require('http');
 const www = http.createServer(handleRequest);
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8080;
 const SERVER_ID = process.env.SERVER_ID || "Unknown";
 
 var handleRequest = (request, response) => {
