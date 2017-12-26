@@ -49,7 +49,7 @@ build_reverse_proxy:
     - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST}
 
-.deploy:
+deploy:
   stage: deploy_to_gcloud
   only: [master]  #build and push images only for master branch commits
   image: google/cloud-sdk:latest
