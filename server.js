@@ -1,5 +1,5 @@
 const http = require('http');
-const www = http.createServer(handleRequest);
+
 
 const PORT = process.env.PORT || 8080;
 const SERVER_ID = process.env.SERVER_ID || "Unknown";
@@ -11,7 +11,7 @@ var handleRequest = (request, response) => {
 };
 
 exports.serverOK = () => { return "OK" }
-
+const www = http.createServer(handleRequest);
 www.listen(PORT);
 
 console.log("Listening on port "+PORT);
