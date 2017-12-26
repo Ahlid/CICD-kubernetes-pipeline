@@ -36,6 +36,8 @@ deploy:
   stage: deploy_to_gcloud
   only: [master]  #build and push images only for master branch commits
   image: google/cloud-sdk:latest
+  before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - LOWERCASE_CONTAINER_IMAGE=$(echo "${CONTAINER_IMAGE}" | tr '[:upper:]' '[:lower:]')
     - echo "${KUBE_CERTIFICATE}" > kube_ca.pem
