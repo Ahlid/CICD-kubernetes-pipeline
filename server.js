@@ -13,3 +13,5 @@ var handleRequest = (request, response) => {
 exports.serverOK = () => { return "OK" }
 
 www.listen(PORT);
+
+console.log("Listening on port "+PORT);
