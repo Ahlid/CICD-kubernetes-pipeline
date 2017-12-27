@@ -31,7 +31,7 @@ build_webserver:
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
     - echo "${CASE_CONTAINER_IMAGE_WEBSERVER}"
     - echo "${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}"
-    - docker build  --file Dockerfile.ws -t ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} .
+    - docker build  --file Dockerfile -t ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} .
     - docker tag ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
