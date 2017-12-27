@@ -107,7 +107,7 @@ spec:
   ports:
   - name: webserver
     port: 80
-    targetPort: 8080
+    targetPort: 80
   selector:
     name: web-server
   type: LoadBalancer
