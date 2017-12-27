@@ -30,7 +30,7 @@ build_webserver:
     - LOWERCASE_CONTAINER_IMAGE_WEBSERVER=$(echo "${CONTAINER_IMAGE_WEBSERVER}" | tr '[:upper:]' '[:lower:]')
     - LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST=$(echo "${CONTAINER_IMAGE_WEBSERVER_LATEST}" | tr '[:upper:]' '[:lower:]')
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - docker build  --file ./WebServerDockerfile -t ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} .
+    - docker build  --file ./Dockerfile.ws -t ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} .
     - docker tag ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER} ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
@@ -44,7 +44,7 @@ build_reverse_proxy:
     - LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY=$(echo "${CONTAINER_IMAGE_REVERSE_PROXY}" | tr '[:upper:]' '[:lower:]')
     - LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST=$(echo "${CONTAINER_IMAGE_REVERSE_PROXY_LATEST}" | tr '[:upper:]' '[:lower:]')
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - docker build --file ./ReverseProxyDockerfile -t ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} .
+    - docker build --file ./Dockerfile.rp -t ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} .
     - docker tag ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST}
