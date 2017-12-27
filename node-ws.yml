@@ -78,7 +78,7 @@ spec:
             # This is a workaround to easily force a restart by incrementing the value (numbers must be quoted)
             # NGINX needs to be restarted for configuration changes, especially DNS changes, to be detected
             - name: RESTART_
-              value: "1"
+              value: __IMAGETAG_WS__ # force the deploy on every build
       volumes:
         - name: nginx-conf
           configMap:
