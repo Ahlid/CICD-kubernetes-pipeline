@@ -25,7 +25,7 @@ spec:
           resources:
             requests:
               memory: "64Mi"
-              cpu: "100m"
+              cpu: "80m"
             limits:
               memory: "256Mi"
               cpu: "250m"
@@ -45,57 +45,49 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 10
-        - name: reverseproxy
-          image: __IMAGETAG_RP__
-          ports: 
+        - name: nginx
+          image: nginx:1.13
+          imagePullPolicy: IfNotPresent
+          ports:
             - containerPort: 80
-              name: www
-          env:
-            - name: SERVER_ID  #export the pod ID as SERVER_ID
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/
           resources:
-            requests:
-              memory: "64Mi"
-              cpu: "100m"
             limits:
-              memory: "256Mi"
-              cpu: "250m"
-          readinessProbe: # time to come alive (only at startup)
-            failureThreshold: 3
-            httpGet:
-              path: /healthz
-              port: 80
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe: # check if app is alive (during executino)
-            failureThreshold: 3
-            httpGet:
-              path: /healthz
-              port: 80
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
+              cpu: 150m
+            requests:
+              cpu: 50m
+          env:
+            # This is a workaround to easily force a restart by incrementing the value (numbers must be quoted)
+            # NGINX needs to be restarted for configuration changes, especially DNS changes, to be detected
+            - name: RESTART_
+              value: "1"
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
       imagePullSecrets:
         - name: __IMAGESECRET_WS__
-        - name: __IMAGESECRET_RP__
-
----
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: web-server
-  namespace: default
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1beta1
-    kind: Deployment
-    name: web-server-deployment
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1 
 kind: Service
@@ -110,4 +102,68 @@ spec:
     targetPort: 80
   selector:
     name: web-server
+  type: ClusterIP
+---
+apiVersion: v1 
+kind: Service
+metadata:
+  labels:
+    name: node-nginx
+  name: node-nginx
+spec: 
+  ports:
+  - name: http
+    port: 80
+  selector:
+    name: node-nginx
   type: LoadBalancer
+---
+apiVersion: v1
+data:
+  nginx.conf: |
+    worker_processes auto;
+    error_log /dev/stdout info;
+
+    events {
+      worker_connections 1024;
+    }
+
+    http {
+      upstream node {
+        server web-server-service:80;
+      }
+
+      server {
+        listen 80 default_server;
+        server_name _;
+
+        location / {
+          proxy_pass http://web-server-service;
+        }
+
+        location ~ /healthz {
+          return 200 "OK";
+          add_header Content-Type text/plain;
+        }
+      }
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: nginx-conf
+  namespace: default
+  selfLink: /api/v1/namespaces/default/configmaps/nginx-conf
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-server
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: web-server-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80

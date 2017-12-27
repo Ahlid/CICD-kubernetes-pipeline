@@ -1,22 +1,17 @@
 variables:
   CONTAINER_IMAGE_WEBSERVER: ${CI_REGISTRY}/${CI_PROJECT_PATH}/webserver:${CI_BUILD_REF_NAME}_${CI_BUILD_REF} 
   CONTAINER_IMAGE_WEBSERVER_LATEST: ${CI_REGISTRY}/${CI_PROJECT_PATH}/webserver:latest
-  CONTAINER_IMAGE_REVERSE_PROXY: ${CI_REGISTRY}/${CI_PROJECT_PATH}/reverseproxy:${CI_BUILD_REF_NAME}_${CI_BUILD_REF} 
-  CONTAINER_IMAGE_REVERSE_PROXY_LATEST: ${CI_REGISTRY}/${CI_PROJECT_PATH}/reverseproxy:latest
   KUBE_NAMESPACE: "default"
 
 before_script:
   - LOWERCASE_CONTAINER_IMAGE_WEBSERVER=$(echo "${CONTAINER_IMAGE_WEBSERVER}" | tr '[:upper:]' '[:lower:]')
   - LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST=$(echo "${CONTAINER_IMAGE_WEBSERVER_LATEST}" | tr '[:upper:]' '[:lower:]')
-  - LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY=$(echo "${CONTAINER_IMAGE_REVERSE_PROXY}" | tr '[:upper:]' '[:lower:]')
-  - LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST=$(echo "${CONTAINER_IMAGE_REVERSE_PROXY_LATEST}" | tr '[:upper:]' '[:lower:]')
 
 services:
   - docker:dind #Start the docker daemon
 
 stages: #declare the stages to task
   - test
-  - build
   - build
   - deploy
 
@@ -41,18 +36,6 @@ build_webserver:
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
 
-build_reverse_proxy:
-  stage: build # build image only after test passed
-  image: docker:git # use simply git docker image
-  services:
-    - docker:dind
-  script:
-    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - docker build --file ./Dockerfile.rp -t ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} .
-    - docker tag ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY} ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST}
-    - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY}
-    - docker push ${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY_LATEST}
-
 deploy_k8s:
   stage: deploy
   only: [master]  #build and push images only for master branch commits
@@ -65,9 +48,7 @@ deploy_k8s:
     - kubectl config use-context default-system
     - kubectl cluster-info
     - kubectl create secret docker-registry ${CI_BUILD_REF} --docker-server=https://registry.gitlab.com/v1/ --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL
-    - sed -i "s#__IMAGETAG_WS__#${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}#g" node-ws.yml 
-    - sed -i "s#__IMAGESECRET_WS__#${CI_BUILD_REF}#g" node-ws.yml 
-    - sed -i "s#__IMAGETAG_RP__#${LOWERCASE_CONTAINER_IMAGE_REVERSE_PROXY}#g" node-ws.yml 
-    - sed -i "s#__IMAGESECRET_RP__#${CI_BUILD_REF}#g" node-ws.yml 
+    - sed -i "s#__IMAGETAG__#${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}#g" node-ws.yml 
+    - sed -i "s#__IMAGESECRET__#${CI_BUILD_REF}#g" node-ws.yml 
     - kubectl apply -f ./node-ws.yml
     - kubectl rollout status -n "$KUBE_NAMESPACE" -w "deployment/web-server-deployment"
