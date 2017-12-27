@@ -87,7 +87,7 @@ spec:
               - key: nginx.conf
                 path: nginx.conf
       imagePullSecrets:
-        - name: __IMAGESECRET_WS__
+        - name: __IMAGESECRET__
 ---
 apiVersion: v1 
 kind: Service
