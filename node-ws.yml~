@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: node
-          image: __IMAGETAG_WS__
+          image: __IMAGETAG__
           ports: 
             - containerPort: 8080
               name: www
@@ -45,43 +45,8 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 10
-        - name: reverseproxy
-          image: __IMAGETAG_RP__
-          ports: 
-            - containerPort: 80
-              name: www
-          env:
-            - name: SERVER_ID  #export the pod ID as SERVER_ID
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "100m"
-            limits:
-              memory: "256Mi"
-              cpu: "250m"
-          readinessProbe: # time to come alive (only at startup)
-            failureThreshold: 3
-            httpGet:
-              path: /healthz
-              port: 80
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe: # check if app is alive (during executino)
-            failureThreshold: 3
-            httpGet:
-              path: /healthz
-              port: 80
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
       imagePullSecrets:
-        - name: __IMAGESECRET_WS__
-        - name: __IMAGESECRET_RP__
-
+        - name: __IMAGESECRET__
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
