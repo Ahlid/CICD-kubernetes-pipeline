@@ -1,10 +1,21 @@
+var chai = require('chai');
+var chaiHttp = require('chai-http');
+var server = require('../server');
 var expect = require("chai").expect;
-var server = require("../server.js");
+var should = chai.should();
 
-describe("App", function() {
-  describe("Server running", function() {
-    it("Is serving the right content", function() {
-      expect(server.serverOK).to.be.ok;
+describe('/POST /employee/new', () => {
+    it('it should POST a new employee', (done) => {
+        var employee = {
+            title: "Developer",
+            name: "John Doe"
+        }
+        chai.request(server)
+            .post('/employee/new')
+            .send(employee)
+            .end((err, res) => {
+                res.should.have.status(200);
+                done();
+            });
     });
-  });
 });
