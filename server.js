@@ -33,6 +33,13 @@ var employeeProvider= new EmployeeProvider('mongo-0.mongo,mongo-1.mongo,mongo-2.
 
 //Routes
 
+//kubernetes
+//index
+app.get('/healthz', function(req, res){
+ res.send('ok');
+});
+
+
 //index
 app.get('/', function(req, res){
   employeeProvider.findAll(function(error, emps){
@@ -42,6 +49,8 @@ app.get('/', function(req, res){
         });
   });
 });
+
+
 
 //new employee
 app.get('/employee/new', function(req, res) {
