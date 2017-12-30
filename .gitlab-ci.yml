@@ -25,8 +25,8 @@ test:
     - apt-get -qq update # updating apt-get
     - apt-get -qq -y install nodejs # installing nodejs
     - apt-get -qq -y install npm # installing npm
-    - apt-get install curl
-    - npm install -g n
+    - apt-get -y install curl
+    - npm -y install -g n
     - n latest
     - npm install # npm test
     - URL=mongodb://127.0.0.1:27017 # Setting the URL for the local database
