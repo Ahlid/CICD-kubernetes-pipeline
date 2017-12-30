@@ -52,4 +52,4 @@ deploy_k8s:
     - sed -i "s#__IMAGESECRET__#${CI_BUILD_REF}#g" kubernetes/node-ws.yaml 
     - kubectl apply -f kubernetes/node-ws.yaml
     - kubectl rollout status -n "$KUBE_NAMESPACE" -w "deployment/web-server-deployment"
-    - kubectl secret delete ${CI_BUILD_REF}
+    - kubectl delete secret ${CI_BUILD_REF}
