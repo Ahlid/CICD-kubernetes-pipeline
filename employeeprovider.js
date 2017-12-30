@@ -5,7 +5,7 @@ var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
 
-const url = "mongodb://10.60.11.3:27017/";
+const url = "mongodb://10.63.252.42:27017/";
 
 // Database Name
 const dbName = 'myproject';
