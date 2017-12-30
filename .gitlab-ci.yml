@@ -29,6 +29,7 @@ test:
     - npm -y install -g n
     - n latest
     - npm install # npm test
+    - source ~/.bashrc # refresh bash
     - URL=mongodb://127.0.0.1:27017 # Setting the URL for the local database
     - npm test
 
