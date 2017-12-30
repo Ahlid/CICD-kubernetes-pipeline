@@ -50,8 +50,8 @@ deploy_k8s:
     - kubectl create secret docker-registry ${CI_BUILD_REF} --docker-server=https://registry.gitlab.com/v1/ --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL
     - sed -i "s#__IMAGETAG__#${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}#g" node-ws.yml 
     - sed -i "s#__IMAGESECRET__#${CI_BUILD_REF}#g" node-ws.yml 
-    - kubectl apply -f ./ssd.yml
-    - kubectl apply -f ./mongo.yml
+    #- kubectl apply -f ./ssd.yml
+    #- kubectl apply -f ./mongo.yml
     - kubectl apply -f ./node-ws.yml
     - kubectl rollout status -n "$KUBE_NAMESPACE" -w "deployment/web-server-deployment"
     - kubectl secret delete ${CI_BUILD_REF}
