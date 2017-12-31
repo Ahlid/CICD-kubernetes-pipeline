@@ -29,7 +29,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-var employeeProvider= new EmployeeProvider('mongo-0.mongo,mongo-1.mongo,mongo-2.mongo', 27017);
+var employeeProvider = new EmployeeProvider();
 
 //Routes
 
