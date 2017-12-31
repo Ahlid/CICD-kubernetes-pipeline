@@ -17,20 +17,13 @@ stages: #declare the stages to task
 
 test:
   stage: test
-  image: mongo
+  image: node:carbon
+  variables:
+      URI: 'mongodb://mongo/app_name'
+      NODE_ENV: 'test'
+  services:
+  - mongo
   script:
-    # - mongo admin # REPL to mongo
-    # - db.createUser({ user: 'root', pwd: 'root', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] }); # Add defaul administrator user
-    # - exit # exit REPL
-    - apt-get -qq update # updating apt-get
-    - apt-get -qq -y install nodejs # installing nodejs
-    - apt-get -qq -y install npm # installing npm
-    - apt-get -y install curl
-    - npm -y install -g n
-    - n latest
-    - npm install # npm test
-    - source ~/.bashrc # refresh bash
-    - URL=mongodb://127.0.0.1:27017 # Setting the URL for the local database
     - npm test
 
 build_webserver:
