@@ -65,7 +65,11 @@ app.post('/employee/new', function(req, res){
         title: req.param('title'),
         name: req.param('name')
     }, function( error, docs) {
-        res.redirect('/')
+        if(error) {
+            res.status(500).send(error);
+        } else {
+            res.redirect('/')
+        }
     });
 });
 
