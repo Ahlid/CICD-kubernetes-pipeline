@@ -97,4 +97,8 @@ app.post('/employee/:id/delete', function(req, res) {
 	});
 });
 
+module.exports = server
+
 app.listen(process.env.PORT || 8080);
+
+
