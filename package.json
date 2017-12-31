@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "test": "nodejs --harmony ./node_modules/mocha/bin/mocha"
+    "test": "nodejs --harmony ./node_modules/mocha/bin/mocha --exit"
   },
   "dependencies": {
     "express": "3.1.0",
