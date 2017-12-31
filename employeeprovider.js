@@ -10,7 +10,7 @@ const url = process.env.MONGO_URL || "mongodb://mongo-0.mongo,mongo-1.mongo,mong
 // Database Name
 const dbName = 'myproject';
 
-EmployeeProvider = function (host, port) {
+EmployeeProvider = function () {
     var that = this;
 // Use connect method to connect to the server
     MongoClient.connect(url, function (err, client) {
