@@ -19,12 +19,12 @@ test:
   stage: test
   image: node:carbon
   variables:
-      URI: 'mongodb://mongo/app_name'
+      MONGO_URL: 'mongodb://mongo/app_name'
       NODE_ENV: 'test'
   services:
   - mongo
   script:
-    - npm install
+    - npm install --silent
     - npm test
 
 build_webserver:
