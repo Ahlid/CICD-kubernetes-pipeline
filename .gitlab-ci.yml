@@ -24,6 +24,7 @@ test:
   services:
   - mongo
   script:
+    - npm install
     - npm test
 
 build_webserver:
