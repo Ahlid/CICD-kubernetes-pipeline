@@ -101,6 +101,7 @@ spec:
   type: LoadBalancer
 ---
 apiVersion: v1
+kind: ConfigMap
 data:
   nginx.conf: |
     worker_processes auto;
@@ -130,7 +131,6 @@ data:
         }
       }
     }
-kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: nginx-conf
