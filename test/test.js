@@ -17,7 +17,7 @@ describe('/POST /employee/new', () => {
                 .post('/employee/new')
                 .send(employee)
                 .end((err, res) => {
-                    console.log(res);
+                    //console.log(res);
                     res.should.have.status(200);
                     done();
                 });
