@@ -6,20 +6,20 @@ var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
 
 const url = process.env.MONGO_URL || "mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/?replicaSet=rs0";
-
+//const url = "mongodb://localhost:27017/";
 // Database Name
 const dbName = 'myproject';
 
-EmployeeProvider = function () {
+EmployeeProvider = function (cb) {
     var that = this;
 // Use connect method to connect to the server
     MongoClient.connect(url, function (err, client) {
-       // assert.equal(null, err);
+        // assert.equal(null, err);
         console.log(err);
         console.log("Connected successfully to server");
 
         that.db = client.db(dbName);
-
+        if (cb) cb();
         client.close();
     });
 };
