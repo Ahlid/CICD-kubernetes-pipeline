@@ -5,8 +5,8 @@ var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
 
-const url = process.env.MONGO_URL || "mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/?replicaSet=rs0";
-//const url = "mongodb://localhost:27017/";
+//const url = process.env.MONGO_URL || "mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/?replicaSet=rs0";
+const url = "mongodb://localhost:27017/";
 // Database Name
 const dbName = 'myproject';
 
@@ -46,6 +46,9 @@ EmployeeProvider.prototype.findAll = function (callback) {
 
 //find an employee by ID
 EmployeeProvider.prototype.findById = function (id, callback) {
+    if(id.length !== 24){
+      return callback(null);
+    }
     this.getCollection(function (error, employee_collection) {
         if (error) callback(error)
         else {
@@ -80,6 +83,11 @@ EmployeeProvider.prototype.save = function (employees, callback) {
 
 // update an employee
 EmployeeProvider.prototype.update = function (employeeId, employees, callback) {
+
+    if(employeeId.length !== 24){
+        return callback(null);
+    }
+
     this.getCollection(function (error, employee_collection) {
         if (error) callback(error);
         else {
@@ -96,6 +104,9 @@ EmployeeProvider.prototype.update = function (employeeId, employees, callback) {
 
 //delete employee
 EmployeeProvider.prototype.delete = function (employeeId, callback) {
+    if(employeeId.length !== 24){
+        return callback(null);
+    }
     this.getCollection(function (error, employee_collection) {
         if (error) callback(error);
         else {

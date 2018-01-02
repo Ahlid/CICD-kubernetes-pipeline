@@ -11,6 +11,7 @@ var express = require('express')
 
 var cb = null;
 var app = express();
+var ready = false;
 
 app.configure(function () {
     app.set('port', process.env.PORT || 8080);
@@ -30,7 +31,10 @@ app.configure('development', function () {
     app.use(express.errorHandler());
 });
 
-var employeeProvider = new EmployeeProvider(()=>{if(cb)cb(server)});
+var employeeProvider = new EmployeeProvider(() => {
+    ready = true;
+    if (cb) cb(server)
+});
 
 //Routes
 
@@ -76,6 +80,10 @@ app.post('/employee/new', function (req, res) {
 //update an employee
 app.get('/employee/:id/edit', function (req, res) {
     employeeProvider.findById(req.param('_id'), function (error, employee) {
+        if(!employee){
+            res.status(404);
+            return res.send("404 employee not found");
+        }
         res.render('employee_edit',
             {
                 title: employee.title,
@@ -90,6 +98,10 @@ app.post('/employee/:id/edit', function (req, res) {
         title: req.param('title'),
         name: req.param('name')
     }, function (error, docs) {
+        if(!docs){
+            res.status(404);
+            return res.send("404 employee not found");
+        }
         res.redirect('/')
     });
 });
@@ -97,6 +109,10 @@ app.post('/employee/:id/edit', function (req, res) {
 //delete an employee
 app.post('/employee/:id/delete', function (req, res) {
     employeeProvider.delete(req.param('_id'), function (error, docs) {
+        if(!docs){
+            res.status(404);
+            return res.send("404 employee not found");
+        }
         res.redirect('/')
     });
 });
@@ -105,6 +121,7 @@ app.post('/employee/:id/delete', function (req, res) {
 var server = app.listen(process.env.PORT || 8080);
 
 module.exports = function (callback) {
+    if (ready) callback(server);
     cb = callback;
 
 };
