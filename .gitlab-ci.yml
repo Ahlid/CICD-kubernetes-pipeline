@@ -27,7 +27,7 @@ test:
     - npm install --silent
     - npm test
 
-.build_webserver:
+build_webserver:
   stage: build # build image only after test passed
   image: docker:git # use simply git docker image
   services:
@@ -41,7 +41,7 @@ test:
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER}
     - docker push ${LOWERCASE_CONTAINER_IMAGE_WEBSERVER_LATEST}
 
-.deploy_k8s:
+deploy_k8s:
   stage: deploy
   only: [master]  #build and push images only for master branch commits
   image: google/cloud-sdk:latest
