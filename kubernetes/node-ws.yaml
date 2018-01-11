@@ -9,7 +9,7 @@ spec:
   template:
     metadata:
       labels:
-        name: web-server
+        name: node-nginx
     spec:
       containers:
         - name: node
